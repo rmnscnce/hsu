@@ -1,0 +1,107 @@
+#!/system/bin/sh
+
+# hsu - Hide su and Magisk binaries to prevent programs from reading the binaries using "ls"
+# Copyright (C) 2020 xaedoplay @ XDA-Developers
+
+# Functions file for hsu
+# Note: Always return to main menu using the "oobecheck" function
+
+MODVER="0.0.0"
+ADBPATH=/data/adb
+MMODPATH=$ADBPATH/modules
+BBPATH=$ADBPATH/magisk/busybox
+ENVPATH=$ADBPATH/.hsu
+HSUFSPATH=$ENVPATH/hsu_fs
+
+if [ -f "$BBPATH" ]; then
+	for ITEM in $($BBPATH --list | tail -n +3); do
+		alias $ITEM="$BBPATH $ITEM"
+	done
+fi
+
+# Common functions
+
+# Header text
+	# Line divider
+	LINEDIV="====================================="
+	# END Line divider
+menuheader () {
+	if [ -z "$ANDROID_SOCKET_adbd" ]; then
+		clear
+	fi
+	echo ""
+	echo -e "hsu - Hide su and other Magisk binaries"
+	echo -e "by xaedoplay @ XDA-Developers"
+	echo ""
+	echo -e $LINEDIV
+	echo -e " $1"
+	echo -e $LINEDIV
+}
+
+# Root access check
+rootcheck () {
+	ls $ADBPATH>/dev/null 2>&1
+	if [ "$?" != 0 ]; then
+		su -c hsu "$@"
+	exit
+	fi
+}
+
+# Check if environment exists
+oobecheck () {
+	if [ -d "$ENVPATH" ]; then
+		mainprompt
+	else
+		oobeprompt
+	fi
+}
+
+# Environment initializer
+initenv () {
+	menuheader "Environment initialization"
+	mkdir -p "$ENVPATH"
+	if [ -d "$ENVPATH" ]; then
+		echo -e "\nEnvironment initialized. Cloning files into environment..."
+		mkdir -p $HSUFSPATH/sbin
+		cp -fpR /sbin/{.,}* $HSUFSPATH/sbin
+		rm -rf $HSUFSPATH/sbin/magisk* $HSUFSPATH/sbin/su $HSUFSPATH/sbin/resetprop $HSUFSPATH/sbin/.magisk
+		echo -e "\nCompleted files cloning. Returning to main menu..."
+		mainprompt
+	else
+		echo -e "\nAn error occured while initializing environment. Exiting...\n"
+		echo -e $LINEDIV
+		exit 1
+	fi
+}
+
+# Root and magisk hide
+hideroot () {
+	menuheader "Root hide\n\nWarning! If the terminal session closed (which is really rare to happen), you'd have to reboot to regain root and Magisk access"
+	echo -e "\nInitializing root hide..."
+	mount $HSUFSPATH/sbin /sbin
+	echo -e "\nRoot hide initialized."
+	read -rsn 1 -p "Input any key to stop roothide"; umount /sbin
+	menuheader "Root hide interrupted and stopped"
+	read -rsn 1 -p "Input any key to return to main menu"; oobecheck
+}
+
+# Clear module environment
+clearenv () {
+	menuheader "Clear module environment"
+	while true; do
+		read -p "Do you wish to clear the module environment? (y/n - case insensitive)" yn
+		case $yn in
+			[Yy]* ) clearenv_exec ; break;;
+			[Nn]* ) oobecheck ; break;;
+			* ) echo -e "Please input (y)es or (n)o.";;
+		esac
+	done
+	echo -e "If you read this message, there's a bug within the function\nPlease file an issue on GitHub, or even better, try and fix the bug yourself and open a pull request on GitHub."
+	exit 1
+}
+	# Execute clear module environment
+	clearenv_exec () {
+		echo -e "Clearing the module environment..."
+		rm -rf $ENVPATH
+		oobecheck
+	}

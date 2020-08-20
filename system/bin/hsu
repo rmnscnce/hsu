@@ -1,0 +1,69 @@
+#!/system/bin/sh
+
+# hsu - Hide su and Magisk binaries to prevent programs from reading the binaries using "ls"
+# Copyright (C) 2020 xaedoplay @ XDA-Developers
+
+# Main module script
+
+
+ADBPATH=/data/adb
+MMODPATH=$ADBPATH/modules
+BBPATH=$ADBPATH/magisk/busybox
+ENVPATH=$ADBPATH/.hsu
+HSUFSPATH=$ENVPATH/hsu_fs
+
+if [ -f "$BBPATH" ]; then
+	for ITEM in $($BBPATH --list | tail -n +3); do
+		alias $ITEM="$BBPATH $ITEM"
+	done
+fi
+
+. $MMODPATH/common/hsu_functions # INCLUDE FUNCTIONS
+
+# Main user prompt
+mainprompt () {
+	menuheader "Main menu"
+	echo -e "\nWhat would you like to do?"
+	echo -e "\n"
+	echo -e "(H)ide root and Magisk binaries"
+	echo -e "(A)utohide root"
+	echo -e "(C)lear up environment"
+	echo -e "(Q)uit"
+	echo -e "\n"
+	while true; do
+		read -p "Input your choice (case-insensitive)" hprompt
+		case $hprompt in
+			[Hh]* ) hideroot ; break ;;
+			[Aa]* ) autohide ; break ;;
+			[Cc]* ) clearenv ; break ;;
+			[Qq]* ) exit ; break ;;
+			* ) echo -e "Invalid input. Please re-enter your desired choice" ;;
+		esac
+	done
+	echo -e "If you read this message, there's a bug within the function\nPlease file an issue on GitHub, or even better, try and fix the bug yourself and open a pull request on GitHub."
+	exit 1
+}
+
+# First-time user prompt
+oobeprompt () {
+	menuheader "Welcome"
+	echo -e "\nWelcome to hsu!\n\nThis module is useful to hide su and Magisk binaries so apps cannot detect root using the command 'ls'. Keep in mind this module is not the replacement of MagiskHide in any kind (even I might say this module somehow gimped MagiskHide), because of the functional differences.\nFor best results in hiding root you may pair this with MagiskHide, though"
+	echo -e $LINEDIV
+	echo -e "Would you like to setup hsu?\n"
+	while true; do
+		read -p "(Y)es or (n)o? (case-insensitive):" hprompt
+		case $hprompt in
+			[Yy]* ) initenv ; break ;;
+			[Nn]* ) echo -e "You cannot use hsu without setting it up. Exiting..." ; exit ; break ;;
+			* ) echo -e "Please input (y)es or (n)o." ;;
+		esac
+	done
+	echo -e "If you read this message, there's a bug within the function\nPlease file an issue on GitHub, or even better, try and fix the bug yourself and open a pull request on GitHub."
+	exit 1
+}
+
+# Start the module
+
+oobecheck # Always use this to return to main menu
+
+exit 1 # This means something is broken, thus an error should be returned

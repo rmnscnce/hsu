@@ -1,7 +1,7 @@
-id=MMT-Ex
-name=Magisk Module Template Extended
-version=v1.5
-versionCode=6
-author=Zackptg5
-description=
-support=https://forum.xda-developers.com/apps/magisk/MMT-Extended
+id=hsu
+name=hsu - Root and Magisk hide
+version=0.0.0
+versionCode=1
+author=rmnscnce
+description=Hide root and Magisk binaries to prevent root detection by using 'ls'!
+#TODO support=
