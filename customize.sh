@@ -41,8 +41,8 @@ REPLACE="
 ##########################################################################################
 
 set_permissions() {
-  : # Remove this if adding to this function
-
+  set_perm /system/bin/hsu 0 0 755 0644
+  set_perm /data/adb/common/hsu_functions 0 0 755 0644
   # Note that all files/folders in magisk module directory have the $MODPATH prefix - keep this prefix on all of your files/folders
   # Some examples:
   
