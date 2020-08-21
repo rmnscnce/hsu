@@ -61,16 +61,20 @@ initenv () {
 	mkdir -p "$ENVPATH"
 	if [ -d "$ENVPATH" ]; then
 		echo -e "\nEnvironment initialized. Cloning files into environment..."
-		mkdir -p $HSUFSPATH/sbin
-		cp -fpR /sbin/{.,}* $HSUFSPATH/sbin
-		rm -rf $HSUFSPATH/sbin/magisk* $HSUFSPATH/sbin/su $HSUFSPATH/sbin/resetprop $HSUFSPATH/sbin/.magisk
+		mkdir -p $HSUFSPATH
+		initenv_cloner >/dev/null
 		echo -e "\nCompleted files cloning. Returning to main menu..."
-		mainprompt
+		oobecheck
 	else
 		echo -e "\nAn error occured while initializing environment. Exiting...\n"
 		echo -e $LINEDIV
 		exit 1
 	fi
+}
+	
+	# Environment initializer cloner
+initenv_cloner () {
+	tar -ch --exclude=*magisk* --exclude=*su* --exclude=resetprop /sbin/. | tar -x -C $HSUFSPATH
 }
 
 # Root and magisk hide
