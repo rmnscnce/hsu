@@ -31,14 +31,19 @@ mainprompt () {
 	echo -e "(Q)uit"
 	echo -e "\n"
 	while true; do
-		read -p "Input your choice (case-insensitive)" hprompt
-		case $hprompt in
-			[Hh]* ) hideroot ; break ;;
-			[Aa]* ) autohide ; break ;;
-			[Cc]* ) clearenv ; break ;;
-			[Qq]* ) exit ; break ;;
-			* ) echo -e "Invalid input. Please re-enter your desired choice" ;;
-		esac
+		echo -e "\nPlease input your choice:"
+		read hprompt
+		if [ "$hprompt" != "${hprompt#[Hh]}" ] ; then
+			hideroot
+		elif [ "$hprompt" != "${hprompt#[Aa]}" ] ; then
+			autohide
+		elif [ "$hprompt" != "${hprompt#[Cc]}" ] ; then
+			clearenv
+		elif [ "$hprompt" != "${hprompt#[Qq]}" ] ; then
+			exit
+		else
+			echo -e "Invalid input $hprompt. Please input your choice"
+		fi
 	done
 	echo -e "If you read this message, there's a bug within the function\nPlease file an issue on GitHub, or even better, try and fix the bug yourself and open a pull request on GitHub."
 	exit 1
@@ -51,12 +56,16 @@ oobeprompt () {
 	echo -e $LINEDIV
 	echo -e "Would you like to setup hsu?\n"
 	while true; do
-		read -p "(Y)es or (n)o? (case-insensitive):" hprompt
-		case $hprompt in
-			[Yy]* ) initenv ; break ;;
-			[Nn]* ) echo -e "You cannot use hsu without setting it up. Exiting..." ; exit ; break ;;
-			* ) echo -e "Please input (y)es or (n)o." ;;
-		esac
+		echo -e "\n(Y)es or (n)o (case-insensitive):"
+		read hprompt
+		if [ "$hprompt" != "${hprompt#[Yy]}" ] ; then
+			initenv
+		elif [ "$hprompt" != "${hprompt#[Nn]}" ] ; then
+			echo -e "You cannot use hsu without setting it up. Exiting..."
+			exit
+		else
+			echo -e "Invalid input $hprompt. Please input (y)es or (n)o"
+		fi
 	done
 	echo -e "If you read this message, there's a bug within the function\nPlease file an issue on GitHub, or even better, try and fix the bug yourself and open a pull request on GitHub."
 	exit 1

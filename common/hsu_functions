@@ -6,7 +6,6 @@
 # Functions file for hsu
 # Note: Always return to main menu using the "oobecheck" function
 
-MODVER="0.0.0"
 ADBPATH=/data/adb
 MMODPATH=$ADBPATH/modules
 BBPATH=$ADBPATH/magisk/busybox
@@ -80,21 +79,28 @@ hideroot () {
 	echo -e "\nInitializing root hide..."
 	mount $HSUFSPATH/sbin /sbin
 	echo -e "\nRoot hide initialized."
-	read -rsn 1 -p "Input any key to stop roothide"; umount /sbin
+	echo -e "Input any key to stop roothide"
+	read -rsn 1
+		umount /sbin
 	menuheader "Root hide interrupted and stopped"
-	read -rsn 1 -p "Input any key to return to main menu"; oobecheck
+	echo -e "\nInput any key to return to main menu"
+	read -rsn 1
+		oobecheck
 }
 
 # Clear module environment
 clearenv () {
 	menuheader "Clear module environment"
 	while true; do
-		read -p "Do you wish to clear the module environment? (y/n - case insensitive)" yn
-		case $yn in
-			[Yy]* ) clearenv_exec ; break;;
-			[Nn]* ) oobecheck ; break;;
-			* ) echo -e "Please input (y)es or (n)o.";;
-		esac
+		echo -e "\nDo you wish to clear the module environment (y)es or (n)o? (case-insensitive)"
+		read yn
+		if [ "$yn" != "${yn#[Yy]}" ] ; then
+			clearenv_exec
+		elif [ "$yn" != "${yn#[Nn]}" ] ; then
+			oobecheck
+		else
+			echo -e "Invalid input $yn. Please enter your choice"
+		fi
 	done
 	echo -e "If you read this message, there's a bug within the function\nPlease file an issue on GitHub, or even better, try and fix the bug yourself and open a pull request on GitHub."
 	exit 1
@@ -105,3 +111,11 @@ clearenv () {
 		rm -rf $ENVPATH
 		oobecheck
 	}
+
+#TODO Autohide root when app is running
+autohide () {
+	menuheader "Autohide root and Magisk"
+	echo -e "\nThis feature is not ready yet!\nInput any key to return to main menu"
+	read -rsn 1
+		oobecheck
+}
