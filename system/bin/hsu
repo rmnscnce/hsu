@@ -1,7 +1,8 @@
 #!/system/bin/sh
 
 # hsu - Hide su and Magisk binaries to prevent programs from reading the binaries using "ls"
-# Copyright (C) 2020 xaedoplay @ XDA-Developers
+# Copyright (C) 2020 xaedoplay @ XDA
+# Licensed under the GNU General Public License v2.0
 
 # Main module script
 

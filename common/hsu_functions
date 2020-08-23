@@ -1,7 +1,8 @@
 #!/system/bin/sh
 
 # hsu - Hide su and Magisk binaries to prevent programs from reading the binaries using "ls"
-# Copyright (C) 2020 xaedoplay @ XDA-Developers
+# Copyright (C) 2020 xaedoplay @ XDA
+# Licensed under the GNU General Public License v2.0
 
 # Functions file for hsu
 # Note: Always return to main menu using the "oobecheck" function
@@ -30,8 +31,9 @@ menuheader () {
 		clear
 	fi
 	echo ""
-	echo -e "hsu - Hide Magisk and root system-wide to prevent any kinds of detection"
-	echo -e "by xaedoplay @ XDA-Developers"
+	echo -e "hsu version $MODVER, Copyright (C) xaedoplay @ XDA"
+	echo -e "Hide Magisk and root system-wide to prevent any kinds of detection"
+	echo -e "\n\nLicensed under the GNU General Public License v2.0\nhsu comes with ABSOLUTELY NO WARRANTY"
 	echo ""
 	echo -e $LINEDIV
 	echo -e " $1"
@@ -89,14 +91,14 @@ hideroot () {
 }
 	# Execute instructions
 	hideroot_exec () {
-		menuheader "Root hide\n\nWarning! If the terminal session closed (which is really rare to happen), you'd have to reboot to regain root and Magisk access"
-		echo -e "\nInitializing root hide..."
+		menuheader "Magisk and root hide\nThis will disable and hide Magisk and root until interrupted\n\nWarning! If the shell session got abruptly terminated (which is really rare to happen), you will have to do a reboot to re-enable Magisk and root."
+		echo -e "\nInitializing Magisk and root hide..."
 		mount $HSUFSPATH/sbin /sbin
-		echo -e "\nRoot hide initialized."
-		echo -e "Input any key to stop roothide"
+		echo -e "\nMagisk and root hide started."
+		echo -e "Input any key to interrupt"
 		read -rsn 1
 			umount /sbin
-		menuheader "Root hide interrupted and stopped"
+		menuheader "Magisk and root hide interrupted and stopped"
 		echo -e "\nInput any key to return to main menu"
 		read -rsn 1
 			oobecheck
@@ -104,7 +106,7 @@ hideroot () {
 
 # Clear module environment
 clearenv () {
-	menuheader "Clear module environment"
+	menuheader "Clear module environment\nThis will clear the environment used by the module to hide Magisk and root. Recommended if you just updated this device."
 	while true; do
 		echo -e "\nDo you wish to clear the module environment (y)es or (n)o? (case-insensitive)"
 		read yn
@@ -137,7 +139,7 @@ helpf () {
 
 #TODO Autohide root when app is running
 autohide () {
-	menuheader "Autohide root and Magisk"
+	menuheader "Autohide root and Magisk\nConfigure and enable process monitoring to disable and hide Magisk and root automatically when an app is running"
 	echo -e "\nThis feature is not ready yet!\nInput any key to return to main menu"
 	read -rsn 1
 		oobecheck
