@@ -27,4 +27,9 @@
   </h3>
 </div>
 
-To use this module, run `hsu` on your favorite terminal emulator as root
+Usage: `hsu` [argument]
+Arguments | Function
+------------ | -------------
+(no arguments passed) | Run `hsu` as usual
+`help` | Show the help menu
+`hide` | Hide root and Magisk (given the environment has been set up before)
