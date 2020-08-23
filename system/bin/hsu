@@ -11,6 +11,7 @@ MMODPATH=$ADBPATH/modules
 BBPATH=$ADBPATH/magisk/busybox
 ENVPATH=$ADBPATH/.hsu
 HSUFSPATH=$ENVPATH/hsu_fs
+MODVER=PRERELEASE
 
 if [ -f "$BBPATH" ]; then
 	for ITEM in $($BBPATH --list | tail -n +3); do
@@ -73,6 +74,12 @@ oobeprompt () {
 
 # Start the module
 
-oobecheck # Always use this to return to main menu
+if [ "$1" = "hide" ] ; then # Check if an argument is passed through
+	hideroot
+elif [ "$1" = "help" ] ; then
+	helpf
+else
+	oobecheck # Always use this to return to main menu
+fi
 
 exit 1 # This means something is broken, thus an error should be returned

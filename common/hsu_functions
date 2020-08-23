@@ -11,6 +11,7 @@ MMODPATH=$ADBPATH/modules
 BBPATH=$ADBPATH/magisk/busybox
 ENVPATH=$ADBPATH/.hsu
 HSUFSPATH=$ENVPATH/hsu_fs
+MODVER=PRERELEASE
 
 if [ -f "$BBPATH" ]; then
 	for ITEM in $($BBPATH --list | tail -n +3); do
@@ -73,19 +74,24 @@ initenv () {
 }
 	
 	# Environment initializer cloner
-initenv_cloner () {
-	tar -ch --exclude=*magisk* --exclude=*su* --exclude=resetprop /sbin/. | tar -x -C $HSUFSPATH
-}
+	initenv_cloner () {
+		tar -ch --exclude=*magisk* --exclude=*su* --exclude=resetprop /sbin/. | tar -x -C $HSUFSPATH
+	}
 
 # Root and magisk hide
 hideroot () {
-	if [ "$(readlink /proc/self/ns/mnt)" != "$(readlink /proc/1/ns/mnt)" ] ; then
-		menuheader "Root hide\n\nWarning! If the terminal session closed (which is really rare to happen), you'd have to reboot to regain root and Magisk access"
-		echo -e "\nERROR: Process using non-global mount namespace mode.\n\nPlease change the mount namespace mode in Magisk Manager settings,then input any key to continue."
-		read -rsn 1
-			hideroot
+	if [ -d $HSUFSPATH/sbin ]; then
+		if [ "$(readlink /proc/self/ns/mnt)" != "$(readlink /proc/1/ns/mnt)" ] ; then
+			menuheader "Root hide\n\nWarning! If the terminal session closed (which is really rare to happen), you'd have to reboot to regain root and Magisk access"
+			echo -e "\nERROR: Process using non-global mount namespace mode.\n\nPlease change the mount namespace mode in Magisk Manager settings,then input any key to continue."
+			read -rsn 1
+				su -c hsu hide
+		else
+			hideroot_exec
+		fi
 	else
-		hideroot_exec
+		echo -e "Environment not initialized yet! Please do so by starting hsu without any arguments."
+		exit 1
 	fi
 }
 	# Execute instructions
@@ -126,6 +132,15 @@ clearenv () {
 		rm -rf $ENVPATH
 		oobecheck
 	}
+
+# Print usage help
+helpf () {
+	echo -e "hsu $MODVER by xaedoplay@XDA\n"
+	echo -e "Usage: $0 [help|hide]"
+	echo -e "\thelp - Show this usage help"
+	echo -e "\thide - Directly hide root and Magisk"
+	exit 2
+}
 
 #TODO Autohide root when app is running
 autohide () {
