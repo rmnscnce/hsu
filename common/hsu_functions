@@ -40,15 +40,6 @@ menuheader () {
 	echo -e $LINEDIV
 }
 
-# Root access check
-rootcheck () {
-	ls $ADBPATH>/dev/null 2>&1
-	if [ "$?" != 0 ]; then
-		su -c hsu "$@"
-	exit
-	fi
-}
-
 # Check if environment exists
 oobecheck () {
 	if [ -d "$ENVPATH" ]; then
@@ -91,22 +82,22 @@ hideroot () {
 }
 	# Execute instructions
 	hideroot_exec () {
-		menuheader "Magisk and root hide\nThis will disable and hide Magisk and root until interrupted\n\nWarning! If the shell session got abruptly terminated (which is really rare to happen), you will have to do a reboot to re-enable Magisk and root."
+		menuheader "Magisk and root hide\n\nThis does disable and hide Magisk and root until interrupted\n\n\nWarning! If the shell session got abruptly terminated (which is really rare to happen), you will have to do a reboot to re-enable Magisk and root."
 		echo -e "\nInitializing Magisk and root hide..."
 		mount $HSUFSPATH/sbin /sbin
 		echo -e "\nMagisk and root hide started."
-		echo -e "Input any key to interrupt"
+		echo -e "Input any key to interrupt and stop"
 		read -rsn 1
 			umount /sbin
-		menuheader "Magisk and root hide interrupted and stopped"
-		echo -e "\nInput any key to return to main menu"
+		menuheader "Magisk and root hide\n\nThis does disable and hide Magisk and root until interrupted\n\n\nWarning! If the shell session got abruptly terminated (which is really rare to happen), you will have to do a reboot to re-enable Magisk and root."
+		echo -e "\nMagisk and root hide was interrupted and stopped.\nInput any key to return to main menu"
 		read -rsn 1
 			oobecheck
 	}
 
 # Clear module environment
 clearenv () {
-	menuheader "Clear module environment\nThis will clear the environment used by the module to hide Magisk and root. Recommended if you just updated this device."
+	menuheader "Clear module environment\n\nThis will clear the environment used by the module to hide Magisk and root. Recommended to do if you just updated this device."
 	while true; do
 		echo -e "\nDo you wish to clear the module environment (y)es or (n)o? (case-insensitive)"
 		read yn
@@ -139,7 +130,7 @@ helpf () {
 
 #TODO Autohide root when app is running
 autohide () {
-	menuheader "Autohide root and Magisk\nConfigure and enable process monitoring to disable and hide Magisk and root automatically when an app is running"
+	menuheader "Autohide root and Magisk\n\nConfigure and enable process monitoring to disable and hide Magisk and root automatically when an app is running"
 	echo -e "\nThis feature is not ready yet!\nInput any key to return to main menu"
 	read -rsn 1
 		oobecheck
