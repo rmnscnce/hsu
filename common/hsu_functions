@@ -81,7 +81,7 @@ initenv () {
 # Root and magisk hide
 hideroot () {
 	if [ -d $HSUFSPATH/sbin ]; then
-		if [ "$(readlink /proc/self/ns/mnt)" != "$(readlink /proc/1/ns/mnt)" ] ; then # THIS RUNS FOR BUGTESTING
+		if [ "$(readlink /proc/self/ns/mnt)" != "$(readlink /proc/1/ns/mnt)" ] ; then
 			menuheader "Root hide\n\nWarning! If the terminal session closed (which is really rare to happen), you'd have to reboot to regain root and Magisk access"
 			echo -e "\nERROR: Process using non-global mount namespace mode.\n\nPlease change the mount namespace mode in Magisk Manager settings,then input any key to continue."
 			read -rsn 1
