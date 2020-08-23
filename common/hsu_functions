@@ -85,7 +85,7 @@ hideroot () {
 			menuheader "Root hide\n\nWarning! If the terminal session closed (which is really rare to happen), you'd have to reboot to regain root and Magisk access"
 			echo -e "\nERROR: Process using non-global mount namespace mode.\n\nPlease change the mount namespace mode in Magisk Manager settings,then input any key to continue."
 			read -rsn 1
-				su -c hsu hide
+				exec su -c hsu hide
 		else
 			hideroot_exec
 		fi

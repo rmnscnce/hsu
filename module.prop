@@ -1,7 +1,7 @@
 id=hsu
 name=hsu - Root and Magisk hide
 version=PRERELEASE
-versionCode=6
+versionCode=7
 author=rmnscnce (xaedoplay@XDA-Developers)
 description=Hide root and Magisk binaries to prevent root detection by using 'ls'!
 #TODO support=
