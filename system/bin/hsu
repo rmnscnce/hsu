@@ -74,9 +74,11 @@ oobeprompt () {
 
 # Start the module
 
-if [ "$1" = "hide" ] ; then # Check if an argument is passed through
-	hideroot
-elif [ "$1" = "help" ] ; then
+if [ "$(readlink /proc/self/ns/mnt)" != "$(readlink /proc/1/ns/mnt)" ] ; then # Checks if hsu runs on global namespace, if not, re-runs on it
+	exec su -M -c hsu $1
+elif [ "$1" = "hide" ] ; then	# Check if an argument is passed through
+	hideroot		#
+elif [ "$1" = "help" ] ; then	#
 	helpf
 else
 	oobecheck # Always use this to return to main menu
