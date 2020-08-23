@@ -9,7 +9,7 @@
 </div>
 
 <div align="center">
-  <strong>hsu is a Magisk module for hiding root and Magisk binaries. THIS MODULE IS NOT A MAGISKHIDE REPLACEMENT IN ANY WAY</strong>
+  <strong>hsu is a Magisk module for hiding Magisk and root by entirely disabling and hiding them</strong>
 </div>
 
 <div align="center">
