@@ -79,18 +79,29 @@ initenv_cloner () {
 
 # Root and magisk hide
 hideroot () {
-	menuheader "Root hide\n\nWarning! If the terminal session closed (which is really rare to happen), you'd have to reboot to regain root and Magisk access"
-	echo -e "\nInitializing root hide..."
-	mount $HSUFSPATH/sbin /sbin
-	echo -e "\nRoot hide initialized."
-	echo -e "Input any key to stop roothide"
-	read -rsn 1
-		umount /sbin
-	menuheader "Root hide interrupted and stopped"
-	echo -e "\nInput any key to return to main menu"
-	read -rsn 1
-		oobecheck
+	if [ "$(readlink /proc/self/ns/mnt)" != "$(readlink /proc/1/ns/mnt)" ] ; then
+		menuheader "Root hide\n\nWarning! If the terminal session closed (which is really rare to happen), you'd have to reboot to regain root and Magisk access"
+		echo -e "\nERROR: Process using non-global mount namespace mode.\n\nPlease change the mount namespace mode in Magisk Manager settings,then input any key to continue."
+		read -rsn 1
+			hideroot
+	else
+		hideroot_exec
+	fi
 }
+	# Execute instructions
+	hideroot_exec () {
+		menuheader "Root hide\n\nWarning! If the terminal session closed (which is really rare to happen), you'd have to reboot to regain root and Magisk access"
+		echo -e "\nInitializing root hide..."
+		mount $HSUFSPATH/sbin /sbin
+		echo -e "\nRoot hide initialized."
+		echo -e "Input any key to stop roothide"
+		read -rsn 1
+			umount /sbin
+		menuheader "Root hide interrupted and stopped"
+		echo -e "\nInput any key to return to main menu"
+		read -rsn 1
+			oobecheck
+	}
 
 # Clear module environment
 clearenv () {

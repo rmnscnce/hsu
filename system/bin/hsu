@@ -22,7 +22,7 @@ fi
 
 # Main user prompt
 mainprompt () {
-	menuheader "Main menu"
+	menuheader "Main menu\n\nIMPORTANT: You need to use global mount namespace mode (available in the Magisk Manager settings, no reboot needed to change settings), for this module to work."
 	echo -e "\nWhat would you like to do?"
 	echo -e "\n"
 	echo -e "(H)ide root and Magisk binaries"
@@ -52,7 +52,7 @@ mainprompt () {
 # First-time user prompt
 oobeprompt () {
 	menuheader "Welcome"
-	echo -e "\nWelcome to hsu!\n\nThis module is useful to hide su and Magisk binaries so apps cannot detect root using the command 'ls'. Keep in mind this module is not the replacement of MagiskHide in any kind (even I might say this module somehow gimped MagiskHide), because of the functional differences.\nFor best results in hiding root you may pair this with MagiskHide, though"
+	echo -e "\nWelcome to hsu!\n\nThis module is useful to hide su and Magisk binaries so apps cannot detect root using the command 'ls'. Keep in mind this module is not the replacement of MagiskHide in any kind (even I might say this module somehow gimped MagiskHide), because of the functional differences.\nFor best results in hiding root you may pair this with MagiskHide, though.\n\nIMPORTANT: You need to use global mount namespace mode (available in the Magisk Manager settings, no reboot needed to change settings), for this to work"
 	echo -e $LINEDIV
 	echo -e "Would you like to setup hsu?\n"
 	while true; do
