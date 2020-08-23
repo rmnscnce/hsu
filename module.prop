@@ -1,7 +1,7 @@
 id=hsu
 name=hsu - Magisk and root hide
 version=PRERELEASE
-versionCode=11
+versionCode=12
 author=rmnscnce (xaedoplay@XDA)
 description=Hide Magisk and root system-wide to prevent any kinds of detection
 #TODO support=

@@ -29,7 +29,7 @@ mainprompt () {
 	echo -e "\n"
 	echo -e "(D)isable and hide Magisk and root"
 	echo -e "(A)utohide root"
-	echo -e "(C)lear up environment (recommended after a system update)"
+	echo -e "(C)lear up environment (recommended after performing a system update)"
 	echo -e "(Q)uit"
 	echo -e "\n"
 	while true; do
@@ -54,7 +54,7 @@ mainprompt () {
 # First-time user prompt
 oobeprompt () {
 	menuheader "Welcome"
-	echo -e "\nWelcome to hsu!\n\nThis module is useful to entirely disable and hide Magisk (and root), thus preventing any kinds of detection. Keep in mind this module will disable Magisk entirely (and its modules) while running, so MagiskHide is not needed (however is still recommended to be enabled)"
+	echo -e "\nWelcome to hsu!\n\nThis module is useful to entirely disable and hide Magisk (and root), thus preventing any kinds of detection. Keep in mind this module will disable Magisk and root entirely while running, so MagiskHide is not needed (however it is still recommended to be enabled)"
 	echo -e $LINEDIV
 	echo -e "Would you like to setup hsu?\n"
 	while true; do

@@ -32,11 +32,11 @@ menuheader () {
 	fi
 	echo ""
 	echo -e "hsu version $MODVER, Copyright (C) xaedoplay @ XDA"
-	echo -e "Hide Magisk and root system-wide to prevent any kinds of detection"
-	echo -e "\n\nLicensed under the GNU General Public License v2.0\nhsu comes with ABSOLUTELY NO WARRANTY"
+	echo -e "\nHide Magisk and root system-wide to prevent any kinds of detection"
+	echo -e "\nLicensed under the GNU General Public License v2.0\nhsu comes with ABSOLUTELY NO WARRANTY"
 	echo ""
 	echo -e $LINEDIV
-	echo -e " $1"
+	echo -e "$1"
 	echo -e $LINEDIV
 }
 
@@ -82,7 +82,7 @@ hideroot () {
 }
 	# Execute instructions
 	hideroot_exec () {
-		menuheader "Magisk and root hide\n\nThis does disable and hide Magisk and root until interrupted\n\n\nWarning! If the shell session got abruptly terminated (which is really rare to happen), you will have to do a reboot to re-enable Magisk and root."
+		menuheader "Magisk and root hide\n\nThis does disable and hide Magisk and root until interrupted\n$LINEDIV\nWarning! If the shell session got abruptly terminated (which is really rare to happen), you will have to do a reboot to re-enable Magisk and root."
 		echo -e "\nInitializing Magisk and root hide..."
 		mount $HSUFSPATH/sbin /sbin
 		echo -e "\nMagisk and root hide started."
