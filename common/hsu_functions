@@ -30,7 +30,7 @@ menuheader () {
 		clear
 	fi
 	echo ""
-	echo -e "hsu - Hide su and other Magisk binaries"
+	echo -e "hsu - Hide Magisk and root system-wide to prevent any kinds of detection"
 	echo -e "by xaedoplay @ XDA-Developers"
 	echo ""
 	echo -e $LINEDIV
@@ -81,14 +81,7 @@ initenv () {
 # Root and magisk hide
 hideroot () {
 	if [ -d $HSUFSPATH/sbin ]; then
-		if [ "$(readlink /proc/self/ns/mnt)" != "$(readlink /proc/1/ns/mnt)" ] ; then
-			menuheader "Root hide\n\nWarning! If the terminal session closed (which is really rare to happen), you'd have to reboot to regain root and Magisk access"
-			echo -e "\nERROR: Process using non-global mount namespace mode.\n\nPlease change the mount namespace mode in Magisk Manager settings,then input any key to continue."
-			read -rsn 1
-				exec su -c hsu hide
-		else
-			hideroot_exec
-		fi
+		hideroot_exec
 	else
 		echo -e "Environment not initialized yet! Please do so by starting hsu without any arguments."
 		exit 1
@@ -135,7 +128,7 @@ clearenv () {
 
 # Print usage help
 helpf () {
-	echo -e "hsu $MODVER by xaedoplay@XDA\n"
+	echo -e "hsu $MODVER by xaedoplay@XDA\nHide Magisk and root system-wide to prevent any kinds of detection\n"
 	echo -e "Usage: $0 [help|hide]"
 	echo -e "\thelp - Show this usage help"
 	echo -e "\thide - Directly hide root and Magisk"

@@ -23,18 +23,18 @@ fi
 
 # Main user prompt
 mainprompt () {
-	menuheader "Main menu\n\nIMPORTANT: You need to use global mount namespace mode (available in the Magisk Manager settings, no reboot needed to change settings), for this module to work."
+	menuheader "Main menu"
 	echo -e "\nWhat would you like to do?"
 	echo -e "\n"
-	echo -e "(H)ide root and Magisk binaries"
+	echo -e "(D)isable and hide Magisk and root"
 	echo -e "(A)utohide root"
-	echo -e "(C)lear up environment"
+	echo -e "(C)lear up environment (recommended after a system update)"
 	echo -e "(Q)uit"
 	echo -e "\n"
 	while true; do
-		echo -e "\nPlease input your choice:"
+		echo -e "\nPlease input your choice (case-insensitive, d|a|c|q):"
 		read hprompt
-		if [ "$hprompt" != "${hprompt#[Hh]}" ] ; then
+		if [ "$hprompt" != "${hprompt#[Dd]}" ] ; then
 			hideroot
 		elif [ "$hprompt" != "${hprompt#[Aa]}" ] ; then
 			autohide
@@ -53,11 +53,11 @@ mainprompt () {
 # First-time user prompt
 oobeprompt () {
 	menuheader "Welcome"
-	echo -e "\nWelcome to hsu!\n\nThis module is useful to hide su and Magisk binaries so apps cannot detect root using the command 'ls'. Keep in mind this module is not the replacement of MagiskHide in any kind (even I might say this module somehow gimped MagiskHide), because of the functional differences.\nFor best results in hiding root you may pair this with MagiskHide, though.\n\nIMPORTANT: You need to use global mount namespace mode (available in the Magisk Manager settings, no reboot needed to change settings), for this to work"
+	echo -e "\nWelcome to hsu!\n\nThis module is useful to entirely disable and hide Magisk (and root), thus preventing any kinds of detection. Keep in mind this module will disable Magisk entirely (and its modules) while running, so MagiskHide is not needed (however is still recommended to be enabled)"
 	echo -e $LINEDIV
 	echo -e "Would you like to setup hsu?\n"
 	while true; do
-		echo -e "\n(Y)es or (n)o (case-insensitive):"
+		echo -e "\n(Y)es or (n)o (case-insensitive, y|n):"
 		read hprompt
 		if [ "$hprompt" != "${hprompt#[Yy]}" ] ; then
 			initenv
@@ -74,10 +74,12 @@ oobeprompt () {
 
 # Start the module
 
-if [ "$1" = "hide" ] ; then # Check if an argument is passed through
-	hideroot
-elif [ "$1" = "help" ] ; then
-	helpf
+if [ "$(readlink /proc/self/ns/mnt)" != "$(readlink /proc/1/ns/mnt)" ] ; then	# Rerun module if not running on global mount namespace mode
+	exec su -M -c hsu $1							#
+elif [ "$1" = "hide" ] ; then 	# Check if an argument is passed through
+	hideroot		# 
+elif [ "$1" = "help" ] ; then	#
+	helpf			#
 else
 	oobecheck # Always use this to return to main menu
 fi
