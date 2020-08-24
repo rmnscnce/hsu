@@ -8,7 +8,7 @@
 # Note: Always return to main menu using the "oobecheck" function
 
 ADBPATH=/data/adb
-MMODPATH=$ADBPATH/modules
+MMODPATH=$ADBPATH/modules/hsu
 BBPATH=$ADBPATH/magisk/busybox
 ENVPATH=$ADBPATH/.hsu
 HSUFSPATH=$ENVPATH/hsu_fs
