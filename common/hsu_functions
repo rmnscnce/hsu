@@ -71,18 +71,20 @@ initenv () {
 		tar -ch --exclude=*magisk* --exclude=*su* --exclude=resetprop /sbin/. | tar -x -C $HSUFSPATH/images/mirrors/
 		if [ "$SESTAT" = 0 ] ; then
 			mkdir -p $HSUFSPATH/images/mount_sbin
-			mount -t ext4 -o rw $HSUFSPATH/images/sbin.img $HSUFSPATH/images/sbin_mount
+			mount -w -t ext4 $HSUFSPATH/images/sbin.img $HSUFSPATH/images/mount_sbin
 			tar -ch -C $HSUFSPATH/images/mirrors/sbin/ . | tar -x -C $HSUFSPATH/images/mount_sbin/
 			umount $HSUFSPATH/images/mount_sbin
 			echo -e "\nSuccessfully initialized mirror image. Returning to main menu..."
 			oobecheck
 		elif [ "$SESTAT" = 1 ] ; then
+			echo -e "SELinux enforcing mode detected! Setting to permissive SELinux..."
 			setenforce 0
 			mkdir -p $HSUFSPATH/images/mount_sbin
-			mount -t ext4 -o rw $HSUFSPATH/images/sbin.img $HSUFSPATH/images/sbin_mount
+			mount -w -t ext4 $HSUFSPATH/images/sbin.img $HSUFSPATH/images/mount_sbin
 			tar -ch -C $HSUFSPATH/images/mirrors/sbin/ . | tar -x -C $HSUFSPATH/images/mount_sbin/
 			umount $HSUFSPATH/images/mount_sbin
 			setenforce 1
+			echo -e "Restoring SELinux enforcing..."
 			echo -e "\nSuccessfully initialized mirror image. Returning to main menu..."
 			oobecheck
 		else
@@ -152,7 +154,7 @@ hideroot () {
 		menuheader "Magisk and root hide\n\nThis does disable and hide Magisk and root until interrupted\n$LINEDIV\nWarning! If the shell session got abruptly terminated (which is really rare to happen), you will have to do a reboot to re-enable Magisk and root."
 		echo -e "\nInitializing Magisk and root hide..."
 		if [ "$SESTAT" = 0 ] ; then
-			mount -t ext4 -o r $HSUFSPATH/images/sbin.img /sbin
+			mount -r -t ext4 $HSUFSPATH/images/sbin.img /sbin
 			echo -e "\nMagisk and root hide started."
 			echo -e "\nInput any key to interrupt and stop"
 			read -rsn 1
@@ -162,8 +164,9 @@ hideroot () {
 			read -rsn 1
 				oobecheck
 		elif [ "$SESTAT" = 1 ] ; then
+			echo -e "SELinux enforcing mode detected! Setting to permissive SELinux..."
 			setenforce 0
-			mount -t ext4 -o r $HSUFSPATH/images/sbin.img /sbin
+			mount -r -t ext4 $HSUFSPATH/images/sbin.img /sbin
 			echo -e "\nMagisk and root hide started."
 			echo -e "\nInput any key to interrupt and stop"
 			read -rsn 1
