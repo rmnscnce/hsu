@@ -8,6 +8,7 @@
 
 
 ADBPATH=/data/adb
+MAGISKPATH=$ADBPATH/magisk
 MMODPATH=$ADBPATH/modules/hsu
 BBPATH=$ADBPATH/magisk/busybox
 ENVPATH=$ADBPATH/.hsu
@@ -20,7 +21,7 @@ if [ -f "$BBPATH" ]; then
 	done
 fi
 
-. $MMODPATH/common/hsu_functions # INCLUDE FUNCTIONS
+. $MAGISKPATH/hsu_functions # INCLUDE FUNCTIONS
 
 # Main user prompt
 mainprompt () {
