@@ -44,7 +44,8 @@ Argument | Function
 
 #### Feature roadmap
 Note: Any contributions are really appreciated
-[x] Magisk temporary disabler
-[x] Seamless environment setup
-[ ] Logger functions
-[ ] Process monitor service and automatic monitor receiver
+
+- [x] Magisk temporary disabler
+- [x] Seamless environment setup
+- [ ] Logger functions
+- [ ] Process monitor service and automatic monitor receiver
