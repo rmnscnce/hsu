@@ -41,3 +41,10 @@ Argument | Function
 (*anything but listed below*) | Run interactive `hsu`
 `help` | Show the help menu
 `hide` | Hide root and Magisk (given the environment has been set up before)
+
+#### Feature roadmap
+Note: Any contributions are really appreciated
+[x] Magisk temporary disabler
+[x] Seamless environment setup
+[ ] Logger functions
+[ ] Process monitor service and automatic monitor receiver
