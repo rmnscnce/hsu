@@ -76,6 +76,8 @@ oobeprompt () {
 
 # Start the module
 
+selinux_stat # Read initial SELinux status to "SESTAT"
+
 if [ "$(readlink /proc/self/ns/mnt)" != "$(readlink /proc/1/ns/mnt)" ] ; then	# Rerun module if not running on global mount namespace mode
 	exec su -M -c hsu $1							#
 elif [ "$1" = "hide" ] ; then 	# Check if an argument is passed through
