@@ -56,7 +56,7 @@ initenv () {
 	if [ -d "$ENVPATH" ]; then
 		echo -e "\nEnvironment initialized. Cloning files into environment..."
 		mkdir -p $HSUFSPATH
-		initenv_cloner >/dev/null
+		initenv_cloner
 		echo -e "\nCompleted files cloning. Returning to main menu..."
 		oobecheck
 	else
@@ -69,7 +69,7 @@ initenv () {
 	# Environment initializer cloner
 	initenv_cloner () {
 		tar -ch --exclude=*magisk* --exclude=*su* --exclude=resetprop /sbin/. | tar -x -C $HSUFSPATH
-	}
+	} 2>/dev/null # suppress errors
 
 # Root and magisk hide
 hideroot () {
@@ -89,7 +89,7 @@ hideroot () {
 		echo -e "Input any key to interrupt and stop"
 		read -rsn 1
 			umount /sbin
-		menuheader "Magisk and root hide\n\nThis does disable and hide Magisk and root until interrupted\n\n\nWarning! If the shell session got abruptly terminated (which is really rare to happen), you will have to do a reboot to re-enable Magisk and root."
+		menuheader "Magisk and root hide\n\nThis does disable and hide Magisk and root until interrupted\n$LINEDIV\nWarning! If the shell session got abruptly terminated (which is really rare to happen), you will have to do a reboot to re-enable Magisk and root."
 		echo -e "\nMagisk and root hide was interrupted and stopped.\nInput any key to return to main menu"
 		read -rsn 1
 			oobecheck
