@@ -71,7 +71,7 @@ initenv () {
 		tar -ch --exclude=*magisk* --exclude=*su* --exclude=resetprop /sbin/. | tar -x -C $HSUFSPATH/images/mirrors/
 		if [ "$SESTAT" = 0 ] ; then
 			mkdir -p $HSUFSPATH/images/mount_sbin
-			mount -w -t ext4 $HSUFSPATH/images/sbin.img $HSUFSPATH/images/mount_sbin
+			mount -w /data/adb/.hsu/hsu_fs/images/sbin.img $HSUFSPATH/images/mount_sbin
 			tar -ch -C $HSUFSPATH/images/mirrors/sbin/ . | tar -x -C $HSUFSPATH/images/mount_sbin/
 			umount $HSUFSPATH/images/mount_sbin
 			echo -e "\nSuccessfully initialized mirror image. Returning to main menu..."
@@ -80,7 +80,7 @@ initenv () {
 			echo -e "SELinux enforcing mode detected! Setting to permissive SELinux..."
 			setenforce 0
 			mkdir -p $HSUFSPATH/images/mount_sbin
-			mount -w -t ext4 $HSUFSPATH/images/sbin.img $HSUFSPATH/images/mount_sbin
+			mount -w /data/adb/.hsu/hsu_fs/images/sbin.img $HSUFSPATH/images/mount_sbin
 			tar -ch -C $HSUFSPATH/images/mirrors/sbin/ . | tar -x -C $HSUFSPATH/images/mount_sbin/
 			umount $HSUFSPATH/images/mount_sbin
 			setenforce 1
@@ -104,28 +104,6 @@ selinux_stat () {
 	fi
 }
 
-# Old Environment initializer
-old_initenv () {
-	menuheader "Environment initialization"
-	mkdir -p "$ENVPATH"
-	if [ -d "$ENVPATH" ]; then
-		echo -e "\nEnvironment initialized. Cloning files into environment..."
-		mkdir -p $HSUFSPATH
-		initenv_cloner
-		echo -e "\nCompleted files cloning. Returning to main menu..."
-		oobecheck
-	else
-		echo -e "\nAn error occured while initializing environment. Exiting...\n"
-		echo -e $LINEDIV
-		exit 1
-	fi
-}
-	
-	# Environment initializer cloner
-	initenv_cloner () {
-		tar -ch --exclude=*magisk* --exclude=*su* --exclude=resetprop /sbin/. | tar -x -C $HSUFSPATH
-	} 2>/dev/null # suppress errors
-
 # Root and magisk hide
 hideroot () {
 	if [ -e $HSUFSPATH/images/sbin.img ]; then
@@ -135,26 +113,13 @@ hideroot () {
 		exit 1
 	fi
 }
-	# Execute instructions
-	old_hideroot_exec () {
-		menuheader "Magisk and root hide\n\nThis does disable and hide Magisk and root until interrupted\n$LINEDIV\nWarning! If the shell session got abruptly terminated (which is really rare to happen), you will have to do a reboot to re-enable Magisk and root."
-		echo -e "\nInitializing Magisk and root hide..."
-		mount $HSUFSPATH/sbin /sbin
-		echo -e "\nMagisk and root hide started."
-		echo -e "Input any key to interrupt and stop"
-		read -rsn 1
-			umount /sbin
-		menuheader "Magisk and root hide\n\nThis does disable and hide Magisk and root until interrupted\n$LINEDIV\nWarning! If the shell session got abruptly terminated (which is really rare to happen), you will have to do a reboot to re-enable Magisk and root."
-		echo -e "\nMagisk and root hide was interrupted and stopped.\nInput any key to return to main menu"
-		read -rsn 1
-			oobecheck
-	}
+
 	# Execute instructions REWORK
 	hideroot_exec () {
 		menuheader "Magisk and root hide\n\nThis does disable and hide Magisk and root until interrupted\n$LINEDIV\nWarning! If the shell session got abruptly terminated (which is really rare to happen), you will have to do a reboot to re-enable Magisk and root."
 		echo -e "\nInitializing Magisk and root hide..."
 		if [ "$SESTAT" = 0 ] ; then
-			mount -r -t ext4 $HSUFSPATH/images/sbin.img /sbin
+			mount -r /data/adb/.hsu/hsu_fs/images/sbin.img /sbin
 			echo -e "\nMagisk and root hide started."
 			echo -e "\nInput any key to interrupt and stop"
 			read -rsn 1
@@ -166,7 +131,7 @@ hideroot () {
 		elif [ "$SESTAT" = 1 ] ; then
 			echo -e "SELinux enforcing mode detected! Setting to permissive SELinux..."
 			setenforce 0
-			mount -r -t ext4 $HSUFSPATH/images/sbin.img /sbin
+			mount -r /data/adb/.hsu/hsu_fs/images/sbin.img /sbin
 			echo -e "\nMagisk and root hide started."
 			echo -e "\nInput any key to interrupt and stop"
 			read -rsn 1
