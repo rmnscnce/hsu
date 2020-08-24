@@ -42,6 +42,7 @@ Argument | Function
 `help` | Show the help menu
 `hide` | Hide root and Magisk (given the environment has been set up before)
 
+---
 #### Feature checklist
 This is the checklist for the features being implemented into hsu. It is sorted from the top priority
 ###### Note: Contributions will really be appreciated
