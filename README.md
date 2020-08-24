@@ -23,7 +23,7 @@
   </h3>
 </div>
 
-Have you ever tried to use the [McDonald's app (proprietary, non-free software)](https://play.google.com/store/apps/details?id=com.mcdonalds.app&hl=en) while rooted on Magisk? I have, and it still doesn't work even if I added it into the MagiskHide blocklist. This Magisk module will help you circumvent those detection methods by completely disabling and hiding Magisk and root. Not even Magisk can detect itself being installed.
+Have you ever tried to use the [McDonald's app (proprietary, non-free software)](https://play.google.com/store/apps/details?id=com.mcdonalds.mobileapp) while rooted on Magisk? I have, and for some reasons it doesn't work even when I added it into the MagiskHide blocklist. This Magisk module will help you circumvent those detection methods by completely disabling and hiding Magisk and root. Not even Magisk can detect itself being installed.
 
 ### Installation steps
 To install `hsu`, you will use the very same installation steps as any other Magisk modules out there.
@@ -42,10 +42,12 @@ Argument | Function
 `help` | Show the help menu
 `hide` | Hide root and Magisk (given the environment has been set up before)
 
-#### Feature roadmap
-Note: Any contributions are really appreciated
+#### Feature checklist
+This is the checklist for the features being implemented into hsu. It is sorted from the top priority
+Note: Contributions will really be appreciated
 
-- [x] Magisk temporary disabler
-- [x] Seamless environment setup
+- [x] Magisk and root temporary disabler
 - [ ] Logger functions
-- [ ] Process monitor service and automatic monitor receiver
+- [ ] Magisk Manager app temporary disabler
+- [ ] Running apps monitor and automatic Magisk (and Manager app) disabler
+- [ ] Xposed hide and disabler
