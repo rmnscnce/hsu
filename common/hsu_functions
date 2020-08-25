@@ -75,7 +75,7 @@ initenv () {
 		if [ "$SESTAT" = 0 ] ; then
 			mkdir -p $MNTDIR/sbin
 			if [ ! -f /dev/loop0 ] ; then
-				mknod /dev/loop0 b 7 0
+				mknod /dev/loop0 b 7 0 >/dev/null
 				echo -e "Created loopblock node"
 			else
 				echo -e "Using the existing loopblock node..."
@@ -90,10 +90,7 @@ initenv () {
 			setenforce 0
 			mkdir -p $MNTDIR/sbin
 			if [ ! -f /dev/loop0 ] ; then
-				mknod /dev/loop0 b 7 0
-				echo -e "Created loopblock node"
-			else
-				echo -e "Using the existing loopblock node..."
+				mknod /dev/loop0 b 7 0 >/dev/null
 			fi
 			mount -w $IMGPATH/sbin.img $MNTDIR/sbin
 			tar -ch -C $FSMIRROR/sbin/ . | tar -x -C $MNTDIR/sbin/
@@ -135,10 +132,7 @@ hideroot () {
 		echo -e "\nInitializing Magisk and root hide..."
 		if [ "$SESTAT" = 0 ] ; then
 			if [ ! -f /dev/loop0 ] ; then
-				mknod /dev/loop0 b 7 0
-				echo -e "Created loopblock node"
-			else
-				echo -e "Using the existing loopblock node..."
+				mknod /dev/loop0 b 7 0 >/dev/null
 			fi
 			mount -r $IMGPATH/sbin.img /sbin
 			echo -e "\nMagisk and root hide started."
@@ -153,10 +147,7 @@ hideroot () {
 			echo -e "SELinux enforcing mode detected! Setting to permissive SELinux..."
 			setenforce 0
 			if [ ! -f /dev/loop0 ] ; then
-				mknod /dev/loop0 b 7 0
-				echo -e "Created loopblock node"
-			else
-				echo -e "Using the existing loopblock node..."
+				mknod /dev/loop0 b 7 0 >/dev/null
 			fi
 			mount -r $IMGPATH/sbin.img /sbin
 			echo -e "\nMagisk and root hide started."
