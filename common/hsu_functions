@@ -74,12 +74,7 @@ initenv () {
 		tar -ch --exclude=*magisk* --exclude=*su* --exclude=resetprop /sbin/. | tar -x -C $FSMIRROR/
 		if [ "$SESTAT" = 0 ] ; then
 			mkdir -p $MNTDIR/sbin
-			if [ ! -f /dev/loop0 ] ; then
-				mknod /dev/loop0 b 7 0 >/dev/null
-				echo -e "Created loopblock node"
-			else
-				echo -e "Using the existing loopblock node..."
-			fi	
+			loopblock
 			mount -w $IMGPATH/sbin.img $MNTDIR/sbin
 			tar -ch -C $FSMIRROR/sbin/ . | tar -x -C $MNTDIR/sbin/
 			umount $MNTDIR/sbin
@@ -89,9 +84,7 @@ initenv () {
 			echo -e "SELinux enforcing mode detected! Setting to permissive SELinux..."
 			setenforce 0
 			mkdir -p $MNTDIR/sbin
-			if [ ! -f /dev/loop0 ] ; then
-				mknod /dev/loop0 b 7 0 >/dev/null
-			fi
+			loopblock
 			mount -w $IMGPATH/sbin.img $MNTDIR/sbin
 			tar -ch -C $FSMIRROR/sbin/ . | tar -x -C $MNTDIR/sbin/
 			umount $MNTDIR/sbin
@@ -131,9 +124,7 @@ hideroot () {
 		menuheader "Magisk and root hide\n\nThis does disable and hide Magisk and root until interrupted\n$LINEDIV\nWarning! If the shell session got abruptly terminated (which is really rare to happen), you will have to do a reboot to re-enable Magisk and root."
 		echo -e "\nInitializing Magisk and root hide..."
 		if [ "$SESTAT" = 0 ] ; then
-			if [ ! -f /dev/loop0 ] ; then
-				mknod /dev/loop0 b 7 0 >/dev/null
-			fi
+			loopblock
 			mount -r $IMGPATH/sbin.img /sbin
 			echo -e "\nMagisk and root hide started."
 			echo -e "\nInput any key to interrupt and stop"
@@ -146,9 +137,7 @@ hideroot () {
 		elif [ "$SESTAT" = 1 ] ; then
 			echo -e "SELinux enforcing mode detected! Setting to permissive SELinux..."
 			setenforce 0
-			if [ ! -f /dev/loop0 ] ; then
-				mknod /dev/loop0 b 7 0 >/dev/null
-			fi
+			loopblock
 			mount -r $IMGPATH/sbin.img /sbin
 			echo -e "\nMagisk and root hide started."
 			echo -e "\nInput any key to interrupt and stop"
@@ -187,6 +176,13 @@ clearenv () {
 		rm -rf $ENVPATH
 		oobecheck
 	}
+
+# Loopblock generation
+loopblock () {
+	if [ ! -e /dev/loop0 ] ; then
+		mknod /dev/loop0 b 7 0
+	fi
+	} >/dev/null
 
 # Print usage help
 helpf () {
