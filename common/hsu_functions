@@ -121,10 +121,10 @@ selinux_stat () {
 
 # Root and magisk hide
 hideroot () {
-	if [ -e $HSUFSPATH/images/sbin.img ]; then
+	if [ -d $IMGPATH ]; then
 		hideroot_exec
 	else
-		echo -e "Environment not initialized (properly) yet! Please do so by starting hsu without any arguments."
+		echo -e "Environment not initialized (properly) yet! Please do so by starting hsu without any arguments (and clear the module environment)."
 		exit 1
 	fi
 }
