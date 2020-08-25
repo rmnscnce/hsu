@@ -12,7 +12,10 @@ MAGISKPATH=$ADBPATH/magisk
 MMODPATH=$ADBPATH/modules/hsu
 BBPATH=$ADBPATH/magisk/busybox
 ENVPATH=$ADBPATH/.hsu
-HSUFSPATH=$ENVPATH/hsu_fs
+IMGPATH=$ENVPATH/fsimg
+FSMIRROR=$ENVPATH/mirror
+MNTDIR=$ENVPATH/mnt_root
+
 MODVER=PRERELEASE
 
 if [ -f "$BBPATH" ]; then
@@ -64,25 +67,37 @@ initenv () {
 }
 	# Environment initializer - imager
 	initenv_img () {
-		mkdir -p $HSUFSPATH/images
-		dd if=/dev/zero of=$HSUFSPATH/images/sbin.img bs=4096 count=32768
-		mkfs.ext4 $HSUFSPATH/images/sbin.img
-		mkdir -p $HSUFSPATH/images/mirrors
-		tar -ch --exclude=*magisk* --exclude=*su* --exclude=resetprop /sbin/. | tar -x -C $HSUFSPATH/images/mirrors/
+		mkdir -p $IMGPATH
+		dd if=/dev/zero of=$IMGPATH/sbin.img bs=4096 count=32768
+		mkfs.ext4 $IMGPATH/sbin.img
+		mkdir -p $FSMIRROR
+		tar -ch --exclude=*magisk* --exclude=*su* --exclude=resetprop /sbin/. | tar -x -C $FSMIRROR/
 		if [ "$SESTAT" = 0 ] ; then
-			mkdir -p $HSUFSPATH/images/mount_sbin
-			mount -w /data/adb/.hsu/hsu_fs/images/sbin.img $HSUFSPATH/images/mount_sbin
-			tar -ch -C $HSUFSPATH/images/mirrors/sbin/ . | tar -x -C $HSUFSPATH/images/mount_sbin/
-			umount $HSUFSPATH/images/mount_sbin
+			mkdir -p $MNTDIR/sbin
+			if [ ! -f /dev/loop0 ] ; then
+				mknod /dev/loop0 b 7 0
+				echo -e "Created loopblock node"
+			else
+				echo -e "Using the existing loopblock node..."
+			fi	
+			mount -w $IMGPATH/sbin.img $MNTDIR/sbin
+			tar -ch -C $FSMIRROR/sbin/ . | tar -x -C $MNTDIR/sbin/
+			umount $MNTDIR/sbin
 			echo -e "\nSuccessfully initialized mirror image. Returning to main menu..."
 			oobecheck
 		elif [ "$SESTAT" = 1 ] ; then
 			echo -e "SELinux enforcing mode detected! Setting to permissive SELinux..."
 			setenforce 0
-			mkdir -p $HSUFSPATH/images/mount_sbin
-			mount -w /data/adb/.hsu/hsu_fs/images/sbin.img $HSUFSPATH/images/mount_sbin
-			tar -ch -C $HSUFSPATH/images/mirrors/sbin/ . | tar -x -C $HSUFSPATH/images/mount_sbin/
-			umount $HSUFSPATH/images/mount_sbin
+			mkdir -p $MNTDIR/sbin
+			if [ ! -f /dev/loop0 ] ; then
+				mknod /dev/loop0 b 7 0
+				echo -e "Created loopblock node"
+			else
+				echo -e "Using the existing loopblock node..."
+			fi
+			mount -w $IMGPATH/sbin.img $MNTDIR/sbin
+			tar -ch -C $FSMIRROR/sbin/ . | tar -x -C $MNTDIR/sbin/
+			umount $MNTDIR/sbin
 			setenforce 1
 			echo -e "Restoring SELinux enforcing..."
 			echo -e "\nSuccessfully initialized mirror image. Returning to main menu..."
@@ -119,7 +134,13 @@ hideroot () {
 		menuheader "Magisk and root hide\n\nThis does disable and hide Magisk and root until interrupted\n$LINEDIV\nWarning! If the shell session got abruptly terminated (which is really rare to happen), you will have to do a reboot to re-enable Magisk and root."
 		echo -e "\nInitializing Magisk and root hide..."
 		if [ "$SESTAT" = 0 ] ; then
-			mount -r /data/adb/.hsu/hsu_fs/images/sbin.img /sbin
+			if [ ! -f /dev/loop0 ] ; then
+				mknod /dev/loop0 b 7 0
+				echo -e "Created loopblock node"
+			else
+				echo -e "Using the existing loopblock node..."
+			fi
+			mount -r $IMGPATH/sbin.img /sbin
 			echo -e "\nMagisk and root hide started."
 			echo -e "\nInput any key to interrupt and stop"
 			read -rsn 1
@@ -131,14 +152,20 @@ hideroot () {
 		elif [ "$SESTAT" = 1 ] ; then
 			echo -e "SELinux enforcing mode detected! Setting to permissive SELinux..."
 			setenforce 0
-			mount -r /data/adb/.hsu/hsu_fs/images/sbin.img /sbin
+			if [ ! -f /dev/loop0 ] ; then
+				mknod /dev/loop0 b 7 0
+				echo -e "Created loopblock node"
+			else
+				echo -e "Using the existing loopblock node..."
+			fi
+			mount -r $IMGPATH/sbin.img /sbin
 			echo -e "\nMagisk and root hide started."
 			echo -e "\nInput any key to interrupt and stop"
 			read -rsn 1
 				umount /sbin
 			setenforce 1
 			menuheader "Magisk and root hide\n\nThis does disable and hide Magisk and root until interrupted\n$LINEDIV\nWarning! If the shell session got abruptly terminated (which is really rare to happen), you will have to do a reboot to re-enable Magisk and root."
-			echo -e "\nMagisk and root hide was interrupted and stopped.\n\nInput any key to return to main menu"
+			echo -e "\nMagisk and root hide was interrupted and stopped.\nSELinux status restored.\n\nInput any key to return to main menu"
 			read -rsn 1
 				oobecheck
 		else
