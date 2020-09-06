@@ -49,6 +49,6 @@ This is the checklist for the features being implemented into hsu. It is sorted 
 
 - [x] Magisk and root temporary disabler
 - [ ] Logger functions
-- [ ] Magisk Manager app temporary disabler
+- [x] Magisk Manager app temporary disabler `current status: partial support (repackaged ones not supported)`
 - [ ] Running apps monitor and automatic Magisk (and Manager app) disabler
 - [ ] Xposed hide and disabler

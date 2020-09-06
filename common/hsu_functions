@@ -126,9 +126,16 @@ hideroot () {
 		if [ "$SESTAT" = 0 ] ; then
 			loopblock
 			mount -r $IMGPATH/sbin.img /sbin
-			echo -e "\nMagisk and root hide started."
+			if [ "$(pm list packages com.topjohnwu.magisk)" = "package:com.topjohnwu.magisk" ] ; then
+				kill -2 $(pidof com.topjohnwu.magisk)
+				pm hide com.topjohnwu.magisk
+			fi
+			echo -e "\nMagisk and root hide started\nYou may need to clear data of the app that have already detected Magisk and root before."
 			echo -e "\nInput any key to interrupt and stop"
 			read -rsn 1
+				if [ $(pm list packages -u com.topjohnwu.magisk) = "package:com.topjohnwu.magisk" ] ; then
+					pm unhide com.topjohnwu.magisk
+				fi
 				umount /sbin
 			menuheader "Magisk and root hide\n\nThis does disable and hide Magisk and root until interrupted\n$LINEDIV\nWarning! If the shell session got abruptly terminated (which is really rare to happen), you will have to do a reboot to re-enable Magisk and root."
 			echo -e "\nMagisk and root hide was interrupted and stopped.\n\nInput any key to return to main menu"
@@ -139,9 +146,16 @@ hideroot () {
 			setenforce 0
 			loopblock
 			mount -r $IMGPATH/sbin.img /sbin
-			echo -e "\nMagisk and root hide started."
+			if [ "$(pm list packages com.topjohnwu.magisk)" = "package:com.topjohnwu.magisk" ] ; then
+				kill -2 $(pidof com.topjohnwu.magisk)
+				pm hide com.topjohnwu.magisk
+			fi
+			echo -e "\nMagisk and root hide started\nYou may need to clear data of the app that have already detected Magisk and root before."
 			echo -e "\nInput any key to interrupt and stop"
 			read -rsn 1
+				if [ $(pm list packages -u com.topjohnwu.magisk) = "package:com.topjohnwu.magisk" ] ; then
+					pm unhide com.topjohnwu.magisk
+				fi
 				umount /sbin
 			setenforce 1
 			menuheader "Magisk and root hide\n\nThis does disable and hide Magisk and root until interrupted\n$LINEDIV\nWarning! If the shell session got abruptly terminated (which is really rare to happen), you will have to do a reboot to re-enable Magisk and root."
